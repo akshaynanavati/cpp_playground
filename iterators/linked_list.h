@@ -29,22 +29,14 @@ template <class T> struct LLNode {
       return;
     }
 
-    constexpr size_t n = 1024;
-    std::array<LLNode *, n> toFree;
     auto cur = next;
     size_t i = 0;
     while (cur) {
-      toFree[i % n] = cur;
       ++i;
       auto tmp = cur->next;
       cur->next = nullptr;
+      delete cur;
       cur = tmp;
-      if (i % n == 0) {
-        freeBlock(toFree);
-      }
-    }
-    if (i % n > 0) {
-      freeBlock(toFree, i);
     }
   }
 

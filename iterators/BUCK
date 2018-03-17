@@ -1,20 +1,21 @@
 cxx_library(
     name='generator',
-    headers=[
+    exported_headers=[
         'generator.h'
     ]
 )
 
 cxx_library(
     name='linked_list',
-    headers=[
+    exported_headers=[
         'linked_list.h'
-    ]
+    ],
+    visibility=['PUBLIC']
 )
 
 cxx_library(
     name='dense_set',
-    headers=[
+    exported_headers=[
         'dense_set.h'
     ]
 )

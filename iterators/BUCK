@@ -1,0 +1,13 @@
+cxx_library(
+    name='generator',
+    headers=[
+        'generator.h'
+    ]
+)
+
+cxx_library(
+    name='linked_list',
+    headers=[
+        'linked_list.h'
+    ]
+)

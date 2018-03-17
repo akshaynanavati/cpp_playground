@@ -13,6 +13,7 @@ template <class Key, size_t probe = 1> class DenseSet {
   std::vector<SetElem<Key>> buf_{1 << 10};
   size_t nElems_ = 0;
   std::hash<Key> hasher_;
+  size_t maxChain_;
 
   Key *insert(SetElem<Key> &&setElem) {
     // Assumes setElem is a Value
@@ -24,6 +25,7 @@ template <class Key, size_t probe = 1> class DenseSet {
       i += (size_t)std::pow(j++, probe);
     }
     buf_[i % n] = std::move(setElem);
+    maxChain_ = std::max(j, maxChain_);
     ++nElems_;
     return &buf_[i % n].k;
   }
@@ -58,7 +60,7 @@ public:
     auto hash = hasher_(k);
     size_t i = hash % n;
     size_t j = 1;
-    while (buf_[i % n].tag != Tag::Empty) {
+    while (j < maxChain_ && buf_[i % n].tag != Tag::Empty) {
       const auto &val = buf_[i % n];
       if (val.tag == Tag::Value && val.k == k) {
         return true;

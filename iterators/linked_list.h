@@ -1,5 +1,6 @@
 #include <memory>
 
+namespace falcon {
 template <class T> struct LLNode {
   LLNode *next;
   T data;
@@ -57,3 +58,4 @@ private:
     freeBlock(block, block.size());
   }
 };
+} // namespace falcon

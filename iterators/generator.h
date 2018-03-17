@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iterator>
 
+namespace falcon {
 template <class T, class F> class RandomAccessGenerator {
 public:
   typedef std::random_access_iterator_tag iterator_category;
@@ -64,3 +65,4 @@ private:
   size_t i_ = 0;
   F f_;
 };
+}

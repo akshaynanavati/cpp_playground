@@ -1,0 +1,9 @@
+cxx_test(
+  name = 'iterators',
+  srcs = [
+    'iterators/dense_set.cpp',
+  ],
+  deps = [
+    '//iterators:dense_set',
+  ],
+)

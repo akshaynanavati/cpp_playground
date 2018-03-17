@@ -16,7 +16,7 @@ template <class Key, size_t probe = 1> class DenseSet {
   std::vector<SetElem<Key>> buf_{1 << 10};
   size_t nElems_ = 0;
   std::hash<Key> hasher_;
-  size_t maxChain_;
+  size_t maxChain_ = 0;
 
   Key *insert(SetElem<Key> &&setElem) {
     // Assumes setElem is a Value
@@ -24,13 +24,21 @@ template <class Key, size_t probe = 1> class DenseSet {
 
     size_t i = setElem.hash % n;
     size_t j = 1;
-    while (buf_[i % n].tag != Tag::Empty) {
+    while (true) {
+      switch (buf_[i % n].tag) {
+      case Tag::Empty:
+      case Tag::Tombstone:
+        buf_[i % n] = std::move(setElem);
+        maxChain_ = std::max(j, maxChain_);
+        ++nElems_;
+        return &buf_[i % n].k;
+      case Tag::Value:
+        if (buf_[i % n].k == setElem.k) {
+          return &buf_[i % n].k;
+        }
+      }
       i += (size_t)std::pow(j++, probe);
     }
-    buf_[i % n] = std::move(setElem);
-    maxChain_ = std::max(j, maxChain_);
-    ++nElems_;
-    return &buf_[i % n].k;
   }
 
   void resize() {
@@ -38,6 +46,8 @@ template <class Key, size_t probe = 1> class DenseSet {
 
     auto buf = std::move(buf_);
     buf_ = std::vector<SetElem<Key>>(n * 2);
+    nElems_ = 0;
+    maxChain_ = 0;
 
     for (size_t i = 0; i < n; ++i) {
       auto setElem = std::move(buf[i]);
@@ -63,7 +73,7 @@ public:
     auto hash = hasher_(k);
     size_t i = hash % n;
     size_t j = 1;
-    while (j < maxChain_ && buf_[i % n].tag != Tag::Empty) {
+    while (j <= maxChain_ && buf_[i % n].tag != Tag::Empty) {
       const auto &val = buf_[i % n];
       if (val.tag == Tag::Value && val.k == k) {
         return true;
@@ -72,5 +82,7 @@ public:
     }
     return false;
   }
+
+  size_t size() { return nElems_; }
 };
 } // namespace falcon

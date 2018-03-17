@@ -32,3 +32,5 @@
 *.app
 
 .mypy_cache
+buck-out/
+.buckd

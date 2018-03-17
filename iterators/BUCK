@@ -11,3 +11,10 @@ cxx_library(
         'linked_list.h'
     ]
 )
+
+cxx_library(
+    name='dense_set',
+    headers=[
+        'dense_set.h'
+    ]
+)

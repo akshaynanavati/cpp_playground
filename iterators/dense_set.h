@@ -1,6 +1,7 @@
 #include <cmath>
 #include <vector>
 
+namespace {
 enum class Tag { Empty = 0, Tombstone = 1, Value = 2 };
 
 template <class Key> struct SetElem {
@@ -8,7 +9,9 @@ template <class Key> struct SetElem {
   Key k;
   uint64_t hash;
 };
+} // namespace
 
+namespace falcon {
 template <class Key, size_t probe = 1> class DenseSet {
   std::vector<SetElem<Key>> buf_{1 << 10};
   size_t nElems_ = 0;
@@ -70,3 +73,4 @@ public:
     return false;
   }
 };
+} // namespace falcon

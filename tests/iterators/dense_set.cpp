@@ -24,7 +24,7 @@ std::pair<DenseSet<uint32_t>, std::unordered_set<uint32_t>> testCase(size_t n) {
   return {ds, us};
 }
 
-TEST(DenseSet, Lookup) {
+TEST(DenseSet, Test) {
   static std::mt19937 rng(time(NULL) / 2);
   for (size_t n = kMinSize; n <= kMaxSize; n <<= 1) {
     auto [dset, uset] = testCase(n);
@@ -33,6 +33,29 @@ TEST(DenseSet, Lookup) {
     for (auto i : uset) {
       ASSERT_TRUE(dset.find(i));
     }
+
+    for (size_t i = 0; i < kLookups; ++i) {
+      auto lookup = rng();
+      bool expected = uset.find(lookup) != uset.end();
+      bool actual = dset.find(lookup);
+      ASSERT_EQ(actual, expected);
+    }
+
+    // Do some random deletions
+    for (size_t i = 0; i < dset.size(); ++i) {
+      if (i & 1) {
+        auto val = uset.begin();
+        if (val != uset.end()) {
+          auto toDelete = *val;
+          ASSERT_EQ(uset.erase(toDelete), 1);
+          ASSERT_EQ(dset.erase(toDelete), 1);
+        }
+      } else {
+        auto val = rng();
+        ASSERT_EQ(dset.erase(val), uset.erase(val));
+      }
+    }
+    ASSERT_EQ(dset.size(), uset.size());
 
     for (size_t i = 0; i < kLookups; ++i) {
       auto lookup = rng();

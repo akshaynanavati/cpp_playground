@@ -5,7 +5,7 @@ namespace {
 enum class Tag { Empty = 0, Tombstone = 1, Value = 2 };
 
 template <class Key> struct SetElem {
-  Tag tag = Tag::Empty;
+  mutable Tag tag = Tag::Empty;
   Key k;
   uint64_t hash;
 };
@@ -18,7 +18,7 @@ template <class Key, size_t probe = 1> class DenseSet {
   std::hash<Key> hasher_;
   size_t maxChain_ = 0;
 
-  Key *insert(SetElem<Key> &&setElem) {
+  const Key *insert(SetElem<Key> &&setElem) {
     // Assumes setElem is a Value
     const size_t n = buf_.size();
 
@@ -51,23 +51,13 @@ template <class Key, size_t probe = 1> class DenseSet {
 
     for (size_t i = 0; i < n; ++i) {
       auto setElem = std::move(buf[i]);
-      switch (setElem.tag) {
-      case Tag::Value:
+      if (setElem.tag == Tag::Value) {
         insert(std::move(buf[i]));
       }
     }
   }
 
-public:
-  Key *insert(const Key &k) {
-    if (nElems_ >= ((buf_.size() * 7) >> 3)) {
-      resize();
-    }
-    auto hash = hasher_(k);
-    return insert({Tag::Value, k, hash});
-  }
-
-  bool find(const Key &k) const {
+  const SetElem<Key> *findElem(const Key &k) const {
     const size_t n = buf_.size();
 
     auto hash = hasher_(k);
@@ -76,11 +66,38 @@ public:
     while (j <= maxChain_ && buf_[i % n].tag != Tag::Empty) {
       const auto &val = buf_[i % n];
       if (val.tag == Tag::Value && val.k == k) {
-        return true;
+        return &val;
       }
       i += (size_t)std::pow(j++, probe);
     }
+    return nullptr;
+  }
+
+public:
+  const Key *insert(const Key &k) {
+    if (nElems_ >= ((buf_.size() * 7) >> 3)) {
+      resize();
+    }
+    auto hash = hasher_(k);
+    return insert({Tag::Value, k, hash});
+  }
+
+  bool find(const Key &k) const {
+    auto elem = findElem(k);
+    if (elem) {
+      return true;
+    }
     return false;
+  }
+
+  size_t erase(const Key &k) {
+    auto elem = findElem(k);
+    if (elem) {
+      elem->tag = Tag::Tombstone;
+      --nElems_;
+      return 1;
+    }
+    return 0;
   }
 
   size_t size() { return nElems_; }

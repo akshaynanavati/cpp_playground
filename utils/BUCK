@@ -5,3 +5,11 @@ cxx_library(
     ],
     visibility = ['PUBLIC'],
 )
+
+cxx_library(
+    name = 'debug',
+    exported_headers = [
+        'debug.h',
+    ],
+    visibility = ['PUBLIC'],
+)

@@ -7,3 +7,14 @@ cxx_test(
     '//iterators:dense_set',
   ],
 )
+
+cxx_test(
+  name = 'trees',
+  srcs = [
+    'trees/redblack.cpp',
+  ],
+  deps = [
+    '//trees:redblack',
+    '//utils:debug',
+  ],
+)

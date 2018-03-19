@@ -1,0 +1,11 @@
+cxx_library(
+    name='redblack',
+    exported_headers=[
+        'redblack.h'
+    ],
+    deps = [
+        '//utils:utils',
+    ],
+    visibility=['PUBLIC']
+)
+

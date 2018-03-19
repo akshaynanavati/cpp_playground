@@ -1,0 +1,7 @@
+cxx_library(
+    name = 'utils',
+    exported_headers = [
+        'utils.h',
+    ],
+    visibility = ['PUBLIC'],
+)

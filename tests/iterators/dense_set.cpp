@@ -21,7 +21,7 @@ std::pair<DenseSet<uint32_t>, std::unordered_set<uint32_t>> testCase(size_t n) {
     ds.insert(val);
     us.insert(val);
   }
-  return {ds, us};
+  return {std::move(ds), std::move(us)};
 }
 
 TEST(DenseSet, Test) {

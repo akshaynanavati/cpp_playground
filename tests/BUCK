@@ -12,9 +12,23 @@ cxx_test(
   name = 'trees',
   srcs = [
     'trees/redblack.cpp',
+    'trees/avl.cpp',
   ],
   deps = [
     '//trees:redblack',
+    '//trees:avl',
+    ':bst_base',
+  ],
+)
+
+cxx_library(
+  name = 'bst_base',
+  exported_headers = [
+    'trees/bst_base.h',
+  ],
+  deps = [
+    '//deps:gtest',
     '//utils:debug',
   ],
+  visibility = ['PUBLIC'],
 )

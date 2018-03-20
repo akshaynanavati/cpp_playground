@@ -19,3 +19,15 @@ cxx_library(
     ],
     visibility=['PUBLIC']
 )
+
+cxx_library(
+    name='avl',
+    exported_headers=[
+        'avl.h'
+    ],
+    deps = [
+        '//utils:utils',
+        ':bst',
+    ],
+    visibility=['PUBLIC']
+)

@@ -1,11 +1,21 @@
 cxx_library(
+    name='bst',
+    exported_headers=[
+        'bst.h'
+    ],
+    deps = [
+    ],
+    visibility=['PUBLIC']
+)
+
+cxx_library(
     name='redblack',
     exported_headers=[
         'redblack.h'
     ],
     deps = [
         '//utils:utils',
+        ':bst',
     ],
     visibility=['PUBLIC']
 )
-

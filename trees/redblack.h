@@ -5,7 +5,7 @@
 #include "trees/bst.h"
 #include "utils/utils.h"
 
-namespace {
+namespace detail {
 enum class Color { Red = 0, Black = 1 };
 
 template <class Key, class Val> struct RBNode {
@@ -37,69 +37,72 @@ template <class Key, class Val> struct RBNode {
     }
   }
 };
-} // namespace
+} // namespace detail
 
 namespace falcon {
-template <class Key, class Val> class RBTree : public BST<RBNode, Key, Val> {
-  void rebalance(RBNode<Key, Val> *node) {
+template <class Key, class Val>
+class RBTree : public BST<detail::RBNode, Key, Val> {
+  void rebalance(detail::RBNode<Key, Val> *node) {
     if (node == nullptr) {
       return;
     }
 
     auto parent = node->parent;
     if (parent == nullptr) {
-      node->color = Color::Black;
+      node->color = detail::Color::Black;
       return;
     }
 
-    if (parent->color == Color::Black) {
+    if (parent->color == detail::Color::Black) {
       return;
     }
 
     auto uncle = node->uncle();
     auto grandparent = node->grandparent();
-    if (getColor(uncle) == Color::Red) {
-      node->color = Color::Black;
-      uncle->color = Color::Black;
-      grandparent->color = Color::Red;
+    if (getColor(uncle) == detail::Color::Red) {
+      node->color = detail::Color::Black;
+      uncle->color = detail::Color::Black;
+      grandparent->color = detail::Color::Red;
       return rebalance(grandparent);
     }
 
     if (grandparent->left && node == grandparent->left->right.get()) {
-      BST<RBNode, Key, Val>::rotateLeft(node);
+      BST<detail::RBNode, Key, Val>::rotateLeft(node);
       std::swap(node, parent);
     } else if (grandparent->right && node == grandparent->right->left.get()) {
-      BST<RBNode, Key, Val>::rotateRight(node);
+      BST<detail::RBNode, Key, Val>::rotateRight(node);
       std::swap(node, parent);
     }
 
     if (node->isLeft()) {
-      BST<RBNode, Key, Val>::rotateRight(parent);
+      BST<detail::RBNode, Key, Val>::rotateRight(parent);
     } else {
-      BST<RBNode, Key, Val>::rotateLeft(parent);
+      BST<detail::RBNode, Key, Val>::rotateLeft(parent);
     }
-    parent->color = Color::Black;
-    grandparent->color = Color::Red;
+    parent->color = detail::Color::Black;
+    grandparent->color = detail::Color::Red;
   }
 
-  Color getColor(RBNode<Key, Val> *node) {
+  detail::Color getColor(detail::RBNode<Key, Val> *node) {
     if (node == nullptr) {
-      return Color::Black;
+      return detail::Color::Black;
     }
     return node->color;
   }
 
 public:
   void insert(Key key, Val val) {
-    if (BST<RBNode, Key, Val>::root_ == nullptr) {
-      BST<RBNode, Key, Val>::root_ = std::make_unique<RBNode<Key, Val>>(
-          std::forward<Key>(key), std::forward<Val>(val));
-      BST<RBNode, Key, Val>::root_->color = Color::Black;
-      ++BST<RBNode, Key, Val>::size_;
+    if (BST<detail::RBNode, Key, Val>::root_ == nullptr) {
+      BST<detail::RBNode, Key, Val>::root_ =
+          std::make_unique<detail::RBNode<Key, Val>>(std::forward<Key>(key),
+                                                     std::forward<Val>(val));
+      BST<detail::RBNode, Key, Val>::root_->color = detail::Color::Black;
+      ++BST<detail::RBNode, Key, Val>::size_;
       return;
     }
 
-    rebalance(BST<RBNode, Key, Val>::insert(std::move(key), std::move(val)));
+    rebalance(
+        BST<detail::RBNode, Key, Val>::insert(std::move(key), std::move(val)));
   }
 };
 } // namespace falcon

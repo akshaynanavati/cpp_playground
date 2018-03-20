@@ -6,7 +6,7 @@
 
 #include "trees/bst.h"
 
-namespace {
+namespace detail {
 template <class Key, class Val> struct AVLNode {
   AVLNode<Key, Val> *parent = nullptr;
   std::unique_ptr<AVLNode<Key, Val>> left = nullptr;
@@ -36,22 +36,23 @@ template <class Key, class Val> struct AVLNode {
     }
   }
 };
-} // namespace
+} // namespace detail
 
 namespace falcon {
-template <class Key, class Val> class AVLTree : public BST<AVLNode, Key, Val> {
-  size_t height(AVLNode<Key, Val> *node) {
+template <class Key, class Val>
+class AVLTree : public BST<detail::AVLNode, Key, Val> {
+  size_t height(detail::AVLNode<Key, Val> *node) {
     if (node == nullptr) {
       return 0;
     }
     return node->height;
   }
 
-  ssize_t deltaH(AVLNode<Key, Val> *node) {
+  ssize_t deltaH(detail::AVLNode<Key, Val> *node) {
     return height(node->left.get()) - height(node->right.get());
   }
 
-  void rebalance(AVLNode<Key, Val> *node) {
+  void rebalance(detail::AVLNode<Key, Val> *node) {
     while (1) {
       if (node == nullptr) {
         return;
@@ -72,17 +73,17 @@ template <class Key, class Val> class AVLTree : public BST<AVLNode, Key, Val> {
       if (parent->left.get() == node) {
         if (grandparent->left.get() == parent) {
           if (deltaH(grandparent) == 2) {
-            BST<AVLNode, Key, Val>::rotateRight(parent);
+            BST<detail::AVLNode, Key, Val>::rotateRight(parent);
             grandparent->height -= 2;
             node = parent;
             continue;
           }
         } else {
           if (deltaH(grandparent) == -2) {
-            BST<AVLNode, Key, Val>::rotateRight(node);
+            BST<detail::AVLNode, Key, Val>::rotateRight(node);
             ++node->height;
             --parent->height;
-            BST<AVLNode, Key, Val>::rotateLeft(node);
+            BST<detail::AVLNode, Key, Val>::rotateLeft(node);
             grandparent->height -= 2;
             continue;
           }
@@ -90,17 +91,17 @@ template <class Key, class Val> class AVLTree : public BST<AVLNode, Key, Val> {
       } else {
         if (grandparent->right.get() == parent) {
           if (deltaH(grandparent) == -2) {
-            BST<AVLNode, Key, Val>::rotateLeft(parent);
+            BST<detail::AVLNode, Key, Val>::rotateLeft(parent);
             grandparent->height -= 2;
             node = parent;
             continue;
           }
         } else {
           if (deltaH(grandparent) == 2) {
-            BST<AVLNode, Key, Val>::rotateLeft(node);
+            BST<detail::AVLNode, Key, Val>::rotateLeft(node);
             ++node->height;
             --parent->height;
-            BST<AVLNode, Key, Val>::rotateRight(node);
+            BST<detail::AVLNode, Key, Val>::rotateRight(node);
             grandparent->height -= 2;
             continue;
           }
@@ -112,14 +113,16 @@ template <class Key, class Val> class AVLTree : public BST<AVLNode, Key, Val> {
 
 public:
   void insert(Key key, Val val) {
-    if (BST<AVLNode, Key, Val>::root_ == nullptr) {
-      BST<AVLNode, Key, Val>::root_ = std::make_unique<AVLNode<Key, Val>>(
-          std::forward<Key>(key), std::forward<Val>(val));
-      ++BST<AVLNode, Key, Val>::size_;
+    if (BST<detail::AVLNode, Key, Val>::root_ == nullptr) {
+      BST<detail::AVLNode, Key, Val>::root_ =
+          std::make_unique<detail::AVLNode<Key, Val>>(std::forward<Key>(key),
+                                                      std::forward<Val>(val));
+      ++BST<detail::AVLNode, Key, Val>::size_;
       return;
     }
 
-    rebalance(BST<AVLNode, Key, Val>::insert(std::move(key), std::move(val)));
+    rebalance(
+        BST<detail::AVLNode, Key, Val>::insert(std::move(key), std::move(val)));
   }
 };
 } // namespace falcon

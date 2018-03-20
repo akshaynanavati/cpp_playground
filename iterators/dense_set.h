@@ -3,7 +3,7 @@
 #include <cmath>
 #include <vector>
 
-namespace {
+namespace detail {
 enum class Tag { Empty = 0, Tombstone = 1, Value = 2 };
 
 template <class Key> struct SetElem {
@@ -11,16 +11,16 @@ template <class Key> struct SetElem {
   Key k;
   uint64_t hash;
 };
-} // namespace
+} // namespace detail
 
 namespace falcon {
 template <class Key, size_t probe = 1> class DenseSet {
-  std::vector<SetElem<Key>> buf_{1 << 10};
+  std::vector<detail::SetElem<Key>> buf_{1 << 10};
   size_t nElems_ = 0;
   std::hash<Key> hasher_;
   size_t maxChain_ = 0;
 
-  const Key *insert(SetElem<Key> &&setElem) {
+  const Key *insert(detail::SetElem<Key> &&setElem) {
     // Assumes setElem is a Value
     const size_t n = buf_.size();
 
@@ -28,13 +28,13 @@ template <class Key, size_t probe = 1> class DenseSet {
     size_t j = 1;
     while (true) {
       switch (buf_[i % n].tag) {
-      case Tag::Empty:
-      case Tag::Tombstone:
+      case detail::Tag::Empty:
+      case detail::Tag::Tombstone:
         buf_[i % n] = std::move(setElem);
         maxChain_ = std::max(j, maxChain_);
         ++nElems_;
         return &buf_[i % n].k;
-      case Tag::Value:
+      case detail::Tag::Value:
         if (buf_[i % n].k == setElem.k) {
           return &buf_[i % n].k;
         }
@@ -47,27 +47,27 @@ template <class Key, size_t probe = 1> class DenseSet {
     const size_t n = buf_.size();
 
     auto buf = std::move(buf_);
-    buf_ = std::vector<SetElem<Key>>(n * 2);
+    buf_ = std::vector<detail::SetElem<Key>>(n * 2);
     nElems_ = 0;
     maxChain_ = 0;
 
     for (size_t i = 0; i < n; ++i) {
       auto setElem = std::move(buf[i]);
-      if (setElem.tag == Tag::Value) {
+      if (setElem.tag == detail::Tag::Value) {
         insert(std::move(buf[i]));
       }
     }
   }
 
-  const SetElem<Key> *findElem(const Key &k) const {
+  const detail::SetElem<Key> *findElem(const Key &k) const {
     const size_t n = buf_.size();
 
     auto hash = hasher_(k);
     size_t i = hash % n;
     size_t j = 1;
-    while (j <= maxChain_ && buf_[i % n].tag != Tag::Empty) {
+    while (j <= maxChain_ && buf_[i % n].tag != detail::Tag::Empty) {
       const auto &val = buf_[i % n];
-      if (val.tag == Tag::Value && val.k == k) {
+      if (val.tag == detail::Tag::Value && val.k == k) {
         return &val;
       }
       i += (size_t)std::pow(j++, probe);
@@ -81,7 +81,7 @@ public:
       resize();
     }
     auto hash = hasher_(k);
-    return insert({Tag::Value, k, hash});
+    return insert({detail::Tag::Value, k, hash});
   }
 
   bool find(const Key &k) const {
@@ -95,7 +95,7 @@ public:
   size_t erase(const Key &k) {
     auto elem = findElem(k);
     if (elem) {
-      elem->tag = Tag::Tombstone;
+      elem->tag = detail::Tag::Tombstone;
       --nElems_;
       return 1;
     }

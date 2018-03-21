@@ -61,7 +61,7 @@ protected:
     }
   }
 
-  Node<Key, Val> *insert(Key key, Val val) {
+  Node<Key, Val> *emplace(Key key, Val val) {
     auto cur = root_.get();
     while (true) {
       if (key == cur->key) {

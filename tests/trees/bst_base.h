@@ -18,14 +18,14 @@ template <template <typename, typename> class BST> void simpleTest() {
       std::make_pair(1, 1), std::make_pair(2, 5), std::make_pair(3, 4),
       std::make_pair(0, 1), std::make_pair(5, 5), std::make_pair(4, 4)};
   for (const auto [k, v] : testCases) {
-    t.insert(k, v);
+    t.emplace(k, v);
   }
 
   for (const auto [k, v] : testCases) {
     ASSERT_EQ(*t.find(k), v);
   }
 
-  t.insert(1, 1000);
+  t.emplace(1, 1000);
   ASSERT_EQ(*t.find(1), 1000);
 }
 
@@ -38,7 +38,7 @@ testCase(size_t n) {
   for (size_t i = 0; i < n; ++i) {
     auto key = rng();
     auto val = rng();
-    tree.insert(key, val);
+    tree.emplace(key, val);
     map.emplace(key, val);
   }
   return {std::move(tree), std::move(map)};

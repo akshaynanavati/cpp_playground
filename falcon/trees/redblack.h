@@ -90,7 +90,7 @@ class RBTree : public BST<detail::RBNode, Key, Val> {
   }
 
 public:
-  void insert(Key key, Val val) {
+  void emplace(Key key, Val val) {
     if (BST<detail::RBNode, Key, Val>::root_ == nullptr) {
       BST<detail::RBNode, Key, Val>::root_ =
           std::make_unique<detail::RBNode<Key, Val>>(std::forward<Key>(key),
@@ -101,7 +101,7 @@ public:
     }
 
     rebalance(
-        BST<detail::RBNode, Key, Val>::insert(std::move(key), std::move(val)));
+        BST<detail::RBNode, Key, Val>::emplace(std::move(key), std::move(val)));
   }
 };
 } // namespace falcon

@@ -14,7 +14,6 @@ cxx_library(
         'redblack.h'
     ],
     deps = [
-        '//utils:utils',
         ':bst',
     ],
     visibility=['PUBLIC']
@@ -26,7 +25,6 @@ cxx_library(
         'avl.h'
     ],
     deps = [
-        '//utils:utils',
         ':bst',
     ],
     visibility=['PUBLIC']

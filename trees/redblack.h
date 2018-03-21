@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "trees/bst.h"
-#include "utils/utils.h"
 
 namespace detail {
 enum class Color { Red = 0, Black = 1 };

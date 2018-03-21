@@ -33,3 +33,14 @@ cxx_library(
     visibility=['PUBLIC'],
 )
 
+cxx_library(
+    name='splay',
+    exported_headers=[
+        'splay.h'
+    ],
+    deps = [
+        ':bst',
+    ],
+    header_namespace = 'falcon/trees/',
+    visibility=['PUBLIC'],
+)

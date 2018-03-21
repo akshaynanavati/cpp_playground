@@ -91,14 +91,11 @@ protected:
     }
   }
 
-public:
-  size_t size() const { return size_; }
-
-  Val *find(const Key &key) const {
+  Node<Key, Val> *findNode(const Key &key) const {
     auto cur = root_.get();
     while (cur) {
       if (key == cur->key) {
-        return &cur->val;
+        return cur;
       } else if (key < cur->key) {
         cur = cur->left.get();
       } else {
@@ -106,6 +103,17 @@ public:
       }
     }
     return nullptr;
+  }
+
+public:
+  size_t size() const { return size_; }
+
+  Val *find(const Key &key) const {
+    auto node = findNode(key);
+    if (node == nullptr) {
+      return nullptr;
+    }
+    return &node->val;
   }
 };
 } // namespace falcon

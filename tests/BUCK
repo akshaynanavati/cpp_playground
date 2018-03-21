@@ -13,10 +13,12 @@ cxx_test(
   srcs = [
     'trees/redblack.cpp',
     'trees/avl.cpp',
+    'trees/splay.cpp',
   ],
   deps = [
     '//falcon/trees:redblack',
     '//falcon/trees:avl',
+    '//falcon/trees:splay',
     ':bst_base',
   ],
 )

@@ -22,11 +22,11 @@ template <template <typename, typename> class BST> void simpleTest() {
   }
 
   for (const auto [k, v] : testCases) {
-    ASSERT_EQ(*t.lookup(k), v);
+    ASSERT_EQ(*t.find(k), v);
   }
 
   t.insert(1, 1000);
-  ASSERT_EQ(*t.lookup(1), 1000);
+  ASSERT_EQ(*t.find(1), 1000);
 }
 
 template <template <typename, typename> class BST>
@@ -51,13 +51,13 @@ template <template <typename, typename> class BST> void testInsert() {
     ASSERT_EQ(tree.size(), map.size());
 
     for (const auto &i : map) {
-      ASSERT_EQ(*tree.lookup(i.first), i.second);
+      ASSERT_EQ(*tree.find(i.first), i.second);
     }
 
     for (size_t i = 0; i < kLookups; ++i) {
       auto lookup = rng();
       auto expected = map.find(lookup);
-      auto actual = tree.lookup(lookup);
+      auto actual = tree.find(lookup);
       if (expected == map.end()) {
         ASSERT_EQ(actual, nullptr);
       } else {

@@ -94,7 +94,7 @@ protected:
 public:
   size_t size() const { return size_; }
 
-  Val *lookup(const Key &key) const {
+  Val *find(const Key &key) const {
     auto cur = root_.get();
     while (cur) {
       if (key == cur->key) {

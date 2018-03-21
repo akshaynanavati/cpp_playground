@@ -3,6 +3,7 @@ cxx_library(
     exported_headers=[
         'generator.h'
     ],
+    header_namespace = 'falcon/iterators/',
     visibility=['PUBLIC']
 )
 
@@ -11,6 +12,7 @@ cxx_library(
     exported_headers=[
         'linked_list.h'
     ],
+    header_namespace = 'falcon/iterators/',
     visibility=['PUBLIC']
 )
 
@@ -19,5 +21,6 @@ cxx_library(
     exported_headers=[
         'dense_set.h'
     ],
+    header_namespace = 'falcon/iterators/',
     visibility=['PUBLIC']
 )

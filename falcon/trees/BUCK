@@ -5,7 +5,8 @@ cxx_library(
     ],
     deps = [
     ],
-    visibility=['PUBLIC']
+    header_namespace = 'falcon/trees/',
+    visibility=['PUBLIC'],
 )
 
 cxx_library(
@@ -16,7 +17,8 @@ cxx_library(
     deps = [
         ':bst',
     ],
-    visibility=['PUBLIC']
+    header_namespace = 'falcon/trees/',
+    visibility=['PUBLIC'],
 )
 
 cxx_library(
@@ -27,5 +29,7 @@ cxx_library(
     deps = [
         ':bst',
     ],
-    visibility=['PUBLIC']
+    header_namespace = 'falcon/trees/',
+    visibility=['PUBLIC'],
 )
+

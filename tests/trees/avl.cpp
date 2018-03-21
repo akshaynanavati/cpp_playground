@@ -1,5 +1,5 @@
+#include "falcon/trees/avl.h"
 #include "tests/trees/bst_base.h"
-#include "trees/avl.h"
 
 #include "gtest/gtest.h"
 

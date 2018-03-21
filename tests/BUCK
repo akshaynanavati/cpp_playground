@@ -4,7 +4,7 @@ cxx_test(
     'iterators/dense_set.cpp',
   ],
   deps = [
-    '//iterators:dense_set',
+    '//falcon/iterators:dense_set',
   ],
 )
 
@@ -15,8 +15,8 @@ cxx_test(
     'trees/avl.cpp',
   ],
   deps = [
-    '//trees:redblack',
-    '//trees:avl',
+    '//falcon/trees:redblack',
+    '//falcon/trees:avl',
     ':bst_base',
   ],
 )
@@ -28,7 +28,7 @@ cxx_library(
   ],
   deps = [
     '//deps:gtest',
-    '//utils:debug',
+    '//falcon/utils:debug',
   ],
   visibility = ['PUBLIC'],
 )

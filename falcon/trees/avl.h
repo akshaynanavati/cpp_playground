@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <memory>
 
-#include "trees/bst.h"
+#include "falcon/trees/bst.h"
 
 namespace detail {
 template <class Key, class Val> struct AVLNode {

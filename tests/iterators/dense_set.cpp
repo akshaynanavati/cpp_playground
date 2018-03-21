@@ -2,7 +2,7 @@
 #include <random>
 #include <unordered_set>
 
-#include "iterators/dense_set.h"
+#include "falcon/iterators/dense_set.h"
 
 #include "gtest/gtest.h"
 

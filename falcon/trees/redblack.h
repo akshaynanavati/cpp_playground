@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "trees/bst.h"
+#include "falcon/trees/bst.h"
 
 namespace detail {
 enum class Color { Red = 0, Black = 1 };

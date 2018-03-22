@@ -17,9 +17,9 @@ cxx_library(
 )
 
 cxx_library(
-    name='dense_set',
+    name='bit_vector',
     exported_headers=[
-        'dense_set.h'
+        'bit_vector.h'
     ],
     header_namespace = 'falcon/iterators/',
     visibility=['PUBLIC']

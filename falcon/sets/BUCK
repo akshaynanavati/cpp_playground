@@ -1,0 +1,17 @@
+cxx_library(
+    name='dense_set',
+    exported_headers=[
+        'dense_set.h'
+    ],
+    header_namespace = 'falcon/sets/',
+    visibility=['PUBLIC']
+)
+
+cxx_library(
+    name='bloom_filter',
+    exported_headers=[
+        'bloom_filter.h'
+    ],
+    header_namespace = 'falcon/sets/',
+    visibility=['PUBLIC']
+)

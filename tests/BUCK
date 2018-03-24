@@ -21,6 +21,16 @@ cxx_test(
   ],
 )
 
+cxx_binary(
+  name = 'hll_bench',
+  srcs = [
+    'sets/hll.cpp',
+  ],
+  deps = [
+    '//:falcon',
+  ],
+)
+
 cxx_library(
   name = 'bst_base',
   exported_headers = [

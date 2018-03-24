@@ -9,7 +9,7 @@ namespace detail {
 /**
  * Computes (\sum_{i = 0}^{i = cont.size()}{2^(-cont[i])})^-1 for HyperLogLog.
  */
-long double harmonicMean(const std::array<uint8_t, 256> &cont) {
+template <class Container> long double harmonicMean(const Container &cont) {
   long double z = 0;
   for (auto i : cont) {
     z += std::exp2(-i);
@@ -51,5 +51,7 @@ public:
     long double z = detail::harmonicMean(registers_);
     return z * (M << LogM) * alpha_;
   }
+
+  void reset() { std::fill(registers_.begin(), registers_.end(), 0); }
 };
 } // namespace falcon

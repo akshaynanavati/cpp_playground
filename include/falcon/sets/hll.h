@@ -23,11 +23,8 @@ class HyperLogLog {
   static_assert(LogM <= 16);
   static constexpr size_t M = ((size_t)1) << LogM;
   static constexpr size_t registerMask = M - 1;
+
   long double alpha_ = 1.0;
-
-  explicit HyperLogLog() = default;
-  explicit HyperLogLog(long double alpha) : alpha_(alpha) {}
-
   Hash<Key> hasher_;
   std::array<uint8_t, M> registers_;
 
@@ -39,6 +36,9 @@ class HyperLogLog {
   }
 
 public:
+  explicit HyperLogLog() = default;
+  explicit HyperLogLog(long double alpha) : alpha_(alpha) {}
+
   void insert(const Key &key) {
     size_t hash = hasher_(key);
     size_t registerIdx = hash & registerMask;

@@ -28,21 +28,21 @@ class HyperLogLog {
   Hash<Key> hasher_;
   std::array<uint8_t, M> registers_;
 
-  size_t countTrailingZeroes(size_t w) {
+  uint8_t countTrailingZeroes(uint64_t w) {
     if (UNLIKELY(w == 0)) {
-      return sizeof(size_t) * 8 - M;
+      return 64 - LogM;
     }
     return __builtin_ctzll(w);
   }
 
 public:
-  explicit HyperLogLog() = default;
-  explicit HyperLogLog(long double alpha) : alpha_(alpha) {}
+  explicit HyperLogLog() { reset(); };
+  explicit HyperLogLog(long double alpha) : alpha_(alpha) { reset(); }
 
   void insert(const Key &key) {
-    size_t hash = hasher_(key);
+    uint64_t hash = hasher_(key);
     size_t registerIdx = hash & registerMask;
-    size_t w = hash >> LogM;
+    uint64_t w = hash >> LogM;
     registers_[registerIdx] =
         std::max(registers_[registerIdx], (uint8_t)countTrailingZeroes(w));
   }

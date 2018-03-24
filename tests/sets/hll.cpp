@@ -10,7 +10,7 @@
 using namespace falcon;
 
 constexpr int64_t lb = 1 << 20;
-constexpr int64_t ub = 1 << 30;
+constexpr int64_t ub = 1ll << 34;
 
 // Generate random numbers and feed them to the HLL algorithm. Each
 // call should generate a unique "hash" and we can see how close the
@@ -36,19 +36,14 @@ int main() {
   std::mt19937 rng;
   Csv writer(std::cout);
   writer.writeRow("HLL Count", "Actual Count", "Delta", "%");
-
-  // Small values
-  for (size_t i = 0; i < 255; ++i) {
-    int64_t n = rng() % (lb);
-    auto hllCount = testHll(n);
-    writer.writeRow(hllCount, n, hllCount - n, 100.0l * (hllCount - n) / n);
-  }
-
-  // Large values
-  for (size_t i = 0; i < 128; ++i) {
-    int64_t n = lb + (rng() % (ub - lb));
-    auto hllCount = testHll(n);
-    writer.writeRow(hllCount, n, hllCount - n, 100.0l * (hllCount - n) / n);
+  HyperLogLog<std::string, Hash, 16> hll(0.3l / 0.7l + 1.0l);
+  for (size_t i = 0; i < ub; ++i) {
+    hll.insert("hello");
+    int64_t n = i + 1;
+    if (n % 1000000 == 0) {
+      int64_t count = hll.count();
+      writer.writeRow(count, n, count - n, 100.0l * (count - n) / n);
+    }
   }
   return 0;
 }

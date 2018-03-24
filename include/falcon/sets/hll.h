@@ -48,7 +48,7 @@ public:
   }
 
   size_t count() {
-    long double z = harmonicMean(registers_);
+    long double z = detail::harmonicMean(registers_);
     return z * (M << LogM) * alpha_;
   }
 };

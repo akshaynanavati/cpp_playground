@@ -8,6 +8,17 @@ cxx_library(
 )
 
 cxx_library(
+    name='hll',
+    exported_headers=[
+        'hll.h'
+    ],
+    deps = [
+    ],
+    header_namespace = 'falcon/sets/',
+    visibility=['PUBLIC']
+)
+
+cxx_library(
     name='bloom_filter',
     exported_headers=[
         'bloom_filter.h'

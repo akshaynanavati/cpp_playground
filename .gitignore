@@ -34,3 +34,5 @@
 .mypy_cache
 buck-out/
 .buckd
+
+deps/build_*

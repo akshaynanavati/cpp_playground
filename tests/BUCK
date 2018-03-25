@@ -29,6 +29,16 @@ cxx_binary(
   deps = [
     '//:falcon',
   ],
+  compiler_flags = [
+    '-Ideps/build_cityhash/include',
+    '-Ldeps/build_cityhash/lib',
+    '-lcityhash'
+  ],
+  linker_flags = [
+    '-Ldeps/build_cityhash/lib',
+    '-Bstatic',
+    '-lcityhash'
+  ]
 )
 
 cxx_library(

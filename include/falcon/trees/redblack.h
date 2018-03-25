@@ -4,41 +4,21 @@
 
 #include "falcon/trees/bst.h"
 
+namespace falcon {
 namespace detail {
 enum class Color { Red = 0, Black = 1 };
 
-template <class Key, class Val> struct RBNode {
+template <class Key, class Val>
+struct RBNode : public BSTNode<RBNode, Key, Val> {
   Color color = Color::Red;
-  RBNode<Key, Val> *parent = nullptr;
-  std::unique_ptr<RBNode<Key, Val>> left = nullptr;
-  std::unique_ptr<RBNode<Key, Val>> right = nullptr;
-  Key key;
-  Val val;
 
-  RBNode(Key &&key, Val &&val)
-      : key(std::forward<Key>(key)), val(std::forward<Val>(val)) {}
-
-  bool isLeaf() const { return left == nullptr && right == nullptr; }
-
-  bool isLeft() {
-    if (parent->left.get() == this) {
-      return true;
-    }
-    return false;
-  }
-  RBNode<Key, Val> *grandparent() { return parent->parent; }
-  RBNode<Key, Val> *uncle() {
-    auto g = grandparent();
-    if (parent->isLeft()) {
-      return g->right.get();
-    } else {
-      return g->left.get();
-    }
-  }
+  template <class Key_, class Val_>
+  RBNode(Key_ &&key, Val_ &&val)
+      : BSTNode<RBNode, Key, Val>(std::forward<Key_>(key),
+                                  std::forward<Val_>(val)) {}
 };
 } // namespace detail
 
-namespace falcon {
 template <class Key, class Val>
 class RBTree : public BST<detail::RBNode, Key, Val> {
   void rebalance(detail::RBNode<Key, Val> *node) {

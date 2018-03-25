@@ -17,6 +17,17 @@ static constexpr cstr past_last_slash(cstr str) {
   return past_last_slash(str, str);
 }
 
+template <class Iter> static std::string iter_to_str(const Iter &iter) {
+  std::stringstream ss;
+  ss << '<';
+  for (const auto &elem : iter) {
+    ss << elem;
+    ss << ',';
+  }
+  ss << '>';
+  return ss.str();
+}
+
 #define ENDL std::endl;
 
 #define __SHORT_FILE__                                                         \
@@ -53,6 +64,8 @@ static constexpr cstr past_last_slash(cstr str) {
       LOG() << #e1 << " = " << (e1) << " != " << #e2 << " = " << e2 << ENDL;   \
     }                                                                          \
   } while (0)
+
+#define PRINT_ITER(iter) LOG() << #iter << " = " << iter_to_str(iter) << ENDL;
 
 #define PRINT_DELIM()                                                          \
   LOG() << "=================================================================" \

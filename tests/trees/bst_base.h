@@ -4,6 +4,8 @@
 #include <cstdint>
 #include <random>
 
+#include "falcon/iterators/tree.h"
+#include "falcon/trees/bst.h"
 #include "gtest/gtest.h"
 
 namespace falcon {
@@ -12,6 +14,18 @@ constexpr size_t kMinSize = 1 << 5;
 constexpr size_t kMaxSize = 1 << 15;
 constexpr size_t kLookups = 1 << 10;
 
+/**
+ * Input: Binary tree
+ * Output: true if BST and false otherwise
+ */
+template <class BST> bool isBst(const BST &t) {
+  std::vector<typename BST::key_t> vec(t.size());
+  auto it = t.template traverse<InOrder>();
+  std::transform(it.begin(), it.end(), vec.begin(),
+                 [](const typename BST::node_t::data_t &p) { return p.first; });
+  return std::is_sorted(vec.begin(), vec.end());
+}
+
 template <template <typename, typename> class BST> void simpleTest() {
   BST<int, int> t;
   std::array<std::pair<int, int>, 6> testCases = {
@@ -19,6 +33,7 @@ template <template <typename, typename> class BST> void simpleTest() {
       std::make_pair(0, 1), std::make_pair(5, 5), std::make_pair(4, 4)};
   for (const auto [k, v] : testCases) {
     t.emplace(k, v);
+    ASSERT_TRUE(isBst(t));
   }
 
   for (const auto [k, v] : testCases) {
@@ -48,6 +63,7 @@ template <template <typename, typename> class BST> void testInsert() {
   static std::mt19937 rng(time(NULL) / 2);
   for (size_t n = kMinSize; n <= kMaxSize; n <<= 1) {
     auto [tree, map] = testCase<BST>(n);
+    ASSERT_TRUE(isBst(tree));
     ASSERT_EQ(tree.size(), map.size());
 
     for (const auto &i : map) {

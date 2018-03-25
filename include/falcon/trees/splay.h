@@ -5,38 +5,17 @@
 
 #include "falcon/trees/bst.h"
 
+namespace falcon {
 namespace detail {
-template <class Key, class Val> struct SplayNode {
-  SplayNode<Key, Val> *parent = nullptr;
-  std::unique_ptr<SplayNode<Key, Val>> left = nullptr;
-  std::unique_ptr<SplayNode<Key, Val>> right = nullptr;
-  Key key;
-  Val val;
-
-  SplayNode(Key &&key, Val &&val)
-      : key(std::forward<Key>(key)), val(std::forward<Val>(val)) {}
-
-  bool isLeaf() const { return left == nullptr && right == nullptr; }
-
-  bool isLeft() {
-    if (parent->left.get() == this) {
-      return true;
-    }
-    return false;
-  }
-  SplayNode<Key, Val> *grandparent() { return parent->parent; }
-  SplayNode<Key, Val> *uncle() {
-    auto g = grandparent();
-    if (parent->isLeft()) {
-      return g->right.get();
-    } else {
-      return g->left.get();
-    }
-  }
+template <class Key, class Val>
+struct SplayNode : public BSTNode<SplayNode, Key, Val> {
+  template <class Key_, class Val_>
+  SplayNode(Key_ &&key, Val_ &&val)
+      : BSTNode<SplayNode, Key, Val>(std::forward<Key_>(key),
+                                     std::forward<Val_>(val)) {}
 };
 } // namespace detail
 
-namespace falcon {
 template <class Key, class Val>
 class SplayTree : public BST<detail::SplayNode, Key, Val> {
   void rebalance(detail::SplayNode<Key, Val> *node) {
@@ -93,7 +72,7 @@ public:
       return nullptr;
     }
     rebalance(node);
-    return &node->val;
+    return &node->data.second;
   }
 };
 } // namespace falcon

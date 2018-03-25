@@ -6,39 +6,19 @@
 
 #include "falcon/trees/bst.h"
 
+namespace falcon {
 namespace detail {
-template <class Key, class Val> struct AVLNode {
-  AVLNode<Key, Val> *parent = nullptr;
-  std::unique_ptr<AVLNode<Key, Val>> left = nullptr;
-  std::unique_ptr<AVLNode<Key, Val>> right = nullptr;
-  Key key;
-  Val val;
+template <class Key, class Val>
+struct AVLNode : public BSTNode<AVLNode, Key, Val> {
   size_t height = 1;
 
-  AVLNode(Key &&key, Val &&val)
-      : key(std::forward<Key>(key)), val(std::forward<Val>(val)) {}
-
-  bool isLeaf() const { return left == nullptr && right == nullptr; }
-
-  bool isLeft() {
-    if (parent->left.get() == this) {
-      return true;
-    }
-    return false;
-  }
-  AVLNode<Key, Val> *grandparent() { return parent->parent; }
-  AVLNode<Key, Val> *uncle() {
-    auto g = grandparent();
-    if (parent->isLeft()) {
-      return g->right.get();
-    } else {
-      return g->left.get();
-    }
-  }
+  template <class Key_, class Val_>
+  AVLNode(Key_ &&key, Val_ &&val)
+      : BSTNode<AVLNode, Key, Val>(std::forward<Key_>(key),
+                                   std::forward<Val_>(val)) {}
 };
 } // namespace detail
 
-namespace falcon {
 template <class Key, class Val>
 class AVLTree : public BST<detail::AVLNode, Key, Val> {
   size_t height(detail::AVLNode<Key, Val> *node) {
@@ -121,8 +101,8 @@ public:
       return;
     }
 
-    rebalance(
-        BST<detail::AVLNode, Key, Val>::emplace(std::move(key), std::move(val)));
+    rebalance(BST<detail::AVLNode, Key, Val>::emplace(std::move(key),
+                                                      std::move(val)));
   }
 };
 } // namespace falcon

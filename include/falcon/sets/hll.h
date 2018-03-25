@@ -14,9 +14,9 @@ namespace detail {
 template <class Container> long double harmonicMean(const Container &cont) {
   long double z = 0;
   for (auto i : cont) {
-    z += std::exp2(-i);
+    z += std::exp2((long double)-i);
   }
-  return 1 / z;
+  return 1.0l / z;
 }
 } // namespace detail
 

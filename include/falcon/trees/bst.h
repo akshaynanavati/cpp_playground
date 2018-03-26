@@ -18,7 +18,7 @@ struct BSTNode {
       : data(std::make_pair<Key, Val>(std::forward<Key_>(key),
                                       std::forward<Val_>(val))) {}
 
-  bool isLeft() {
+  bool isLeft() const {
     if (parent->left.get() == this) {
       return true;
     }

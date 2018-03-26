@@ -2,6 +2,8 @@
 
 #include <iterator>
 
+// TODO fix bidirectional iterator; specifically, -- does not work because it
+// just has nullptr
 namespace falcon {
 template <class TreeNode> class InOrderIt {
   TreeNode *next_ = nullptr;
@@ -41,7 +43,7 @@ public:
 
   InOrderIt &operator--() {
     if (next_->left) {
-      next_ = next_->left;
+      next_ = next_->left.get();
       while (next_->right) {
         next_ = next_->right.get();
       }
@@ -52,6 +54,7 @@ public:
   }
 
   const typename TreeNode::data_t &operator*() const { return next_->data; }
+  const typename TreeNode::data_t *operator->() const { return &next_->data; }
 
   bool operator==(const InOrderIt &other) const {
     if (next_ == nullptr && other.next_ == nullptr) {
@@ -73,7 +76,7 @@ public:
 };
 
 template <class TreeNode> class PreOrderIt {
-  const TreeNode *next_;
+  const TreeNode *next_ = nullptr;
 
 public:
   typedef std::bidirectional_iterator_tag iterator_category;
@@ -114,6 +117,7 @@ public:
   }
 
   const typename TreeNode::data_t &operator*() const { return next_->data; }
+  const typename TreeNode::data_t *operator->() const { return &next_->data; }
 
   bool operator==(const PreOrderIt &other) const {
     if (next_ == nullptr && other.next_ == nullptr) {
@@ -140,7 +144,7 @@ public:
  * entirely sure how to implement it as such.
  */
 template <class TreeNode> class PostOrderIt {
-  TreeNode *next_;
+  TreeNode *next_ = nullptr;
 
 public:
   typedef std::bidirectional_iterator_tag iterator_category;
@@ -195,6 +199,7 @@ public:
   }
 
   const typename TreeNode::data_t &operator*() const { return next_->data; }
+  const typename TreeNode::data_t *operator->() const { return &next_->data; }
 
   bool operator==(const PostOrderIt &other) const {
     if (next_ == nullptr && other.next_ == nullptr) {

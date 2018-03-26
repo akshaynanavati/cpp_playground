@@ -2,6 +2,7 @@ cxx_test(
   name = 'iterators',
   srcs = [
     'iterators/dense_set.cpp',
+    'iterators/tree.cpp',
   ],
   deps = [
     '//:falcon',

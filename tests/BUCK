@@ -42,6 +42,26 @@ cxx_binary(
   ]
 )
 
+cxx_binary(
+  name = 'cms_bench',
+  srcs = [
+    'sets/count_min_sketch.cpp',
+  ],
+  deps = [
+    '//:falcon',
+  ],
+  compiler_flags = [
+    '-Ideps/build_cityhash/include',
+    '-Ldeps/build_cityhash/lib',
+    '-lcityhash'
+  ],
+  linker_flags = [
+    '-Ldeps/build_cityhash/lib',
+    '-Bstatic',
+    '-lcityhash'
+  ]
+)
+
 cxx_library(
   name = 'bst_base',
   exported_headers = [
